@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#f6f7f2">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <title>Township Economy — Local people. Local opportunity.</title>
   <style>
     :root {
@@ -34,7 +35,60 @@
     .brand { display: flex; align-items: center; gap: 11px; color: var(--ink); text-decoration: none; font-weight: 800; letter-spacing: -.5px; }
     .brand-mark { width: 39px; height: 39px; display: grid; place-items: center; border-radius: 13px; background: var(--green); color: var(--lime); font-size: 21px; }
     .brand small { display: block; color: var(--muted); font-size: 10px; font-weight: 600; letter-spacing: 1.2px; margin-top: 2px; }
-    .header-note { color: var(--muted); font-size: 13px; }
+    .header-nav { display: flex; align-items: center; gap: 22px; min-width: 0; }
+    .header-nav a { color: var(--muted); font-size: 13px; font-weight: 650; text-decoration: none; }
+    .header-nav a:hover { color: var(--green); }
+    #home-link { display: none; }
+    .directory-nav { display: none; }
+    body.signed-out .header-nav { display: none; }
+    .account-tools { display: flex; align-items: center; gap: 10px; }
+    .account-tools[hidden] { display: none; }
+    .account-tools span { color: var(--muted); font-size: 12px; }
+    .account-tools button { border: 0; padding: 8px 11px; border-radius: 8px; background: #edf4df; color: var(--green-dark); font-size: 11px; font-weight: 750; }
+    .auth-gate { max-width: 470px; margin: 30px auto 70px; padding: 28px; border: 1px solid var(--line); border-radius: 18px; background: white; box-shadow: var(--shadow); }
+    .auth-gate[hidden] { display: none; }
+    .auth-gate h1 { margin: 8px 0; color: var(--ink); font-size: 28px; letter-spacing: -1px; }
+    .auth-gate > p { margin: 0 0 20px; color: var(--muted); font-size: 13px; line-height: 1.65; }
+    .auth-form { display: grid; gap: 12px; }
+    .auth-form[hidden] { display: none; }
+    .auth-field { display: grid; gap: 6px; }
+    .auth-field label { color: #53645a; font-size: 11px; font-weight: 750; }
+    .auth-field input { width: 100%; padding: 11px; border: 1px solid var(--line); border-radius: 9px; outline: none; font-size: 13px; }
+    .auth-field input:focus { border-color: #8eac8c; box-shadow: 0 0 0 3px rgba(68,119,82,.1); }
+    .auth-error { min-height: 18px; margin: 10px 0 0; color: #a33b2d; font-size: 12px; }
+    .auth-error.success { color: var(--green); }
+    .auth-switch { margin-top: 16px; color: var(--muted); font-size: 12px; text-align: center; }
+    .auth-switch button { border: 0; padding: 0; background: transparent; color: var(--green); font-weight: 750; text-decoration: underline; }
+    .auth-forgot { margin: 0; text-align: right; font-size: 12px; }
+    .auth-forgot button, .auth-back { border: 0; padding: 0; background: transparent; color: var(--green); font-size: 12px; font-weight: 750; text-decoration: underline; }
+    .auth-back { display: block; margin: 16px auto 0; }
+    .auth-back[hidden], .auth-forgot[hidden] { display: none; }
+    .auth-notice { margin-top: 16px; padding: 11px; border-radius: 9px; background: #f1f5e9; color: #54684d; font-size: 11px; line-height: 1.5; }
+    body.signed-out main, body.signed-out footer { display: none; }
+    body.directory-mode .header-nav a[data-home-nav] { display: none; }
+    body.directory-mode #home-link { display: inline; }
+    body.directory-mode .header-nav a.directory-nav { display: inline; }
+    .about { display: grid; grid-template-columns: 1.05fr 1fr; gap: 36px; align-items: center; margin: 22px 0 30px; padding: 28px 32px; border: 1px solid var(--line); border-radius: 18px; background: white; }
+    .about h2 { margin: 9px 0 10px; font-size: 25px; letter-spacing: -.8px; }
+    .about-copy p { margin: 0; color: #58675f; font-size: 13px; line-height: 1.75; }
+    .about-eyebrow { color: var(--green); font-size: 10px; font-weight: 850; letter-spacing: 1.5px; text-transform: uppercase; }
+    .about-points { display: grid; gap: 10px; }
+    .about-point { display: flex; gap: 12px; align-items: start; padding: 13px; border-radius: 12px; background: #f6f8f2; }
+    .about-point-icon { display: grid; place-items: center; width: 31px; height: 31px; flex: 0 0 auto; border-radius: 10px; background: #e8f0df; color: var(--green); font-weight: 800; }
+    .about-point strong { display: block; margin: 1px 0 3px; font-size: 12px; }
+    .about-point span:last-child { color: var(--muted); font-size: 11px; line-height: 1.5; }
+    .purpose-grid { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .purpose-card { padding: 17px; border: 1px solid var(--line); border-radius: 13px; background: #fbfcf9; }
+    .purpose-card h3 { margin: 0 0 7px; color: var(--green); font-size: 11px; letter-spacing: 1.1px; text-transform: uppercase; }
+    .purpose-card p { margin: 0; color: #58675f; font-size: 12px; line-height: 1.65; }
+    .contact { margin: 0 0 32px; padding: 27px 30px; border: 1px solid var(--line); border-radius: 18px; background: white; }
+    .contact h2 { margin: 8px 0; font-size: 24px; letter-spacing: -.7px; }
+    .contact > p { max-width: 650px; margin: 0; color: #58675f; font-size: 13px; line-height: 1.7; }
+    .contact-links { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 17px; }
+    .contact-link { display: inline-flex; align-items: center; gap: 8px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px; background: #f8f9f6; color: #768178; font-size: 12px; font-weight: 700; }
+    .contact-link svg { width: 17px; height: 17px; fill: currentColor; }
+    .contact-note { margin-top: 9px !important; color: var(--muted) !important; font-size: 11px !important; }
+    .contact-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
     .hero {
       position: relative; overflow: hidden; min-height: 335px; padding: 51px 56px;
       border-radius: 25px; background: var(--green); color: white;
@@ -56,6 +110,9 @@
     .section-heading { display: flex; justify-content: space-between; align-items: end; gap: 20px; margin-bottom: 19px; }
     .section-heading h2 { margin: 0 0 5px; font-size: 25px; letter-spacing: -.7px; }
     .section-heading p { margin: 0; color: var(--muted); font-size: 13px; }
+    .view-all-row { display: flex; justify-content: flex-end; margin-top: 16px; }
+    .view-all { display: inline-flex; align-items: center; padding: 8px 12px; border-radius: 8px; background: #edf4df; color: #4b6833; font-size: 12px; font-weight: 750; text-decoration: none; transition: background .15s, transform .15s; }
+    .view-all:hover { background: #dcebc2; transform: translateY(-1px); }
     .tabs { display: flex; gap: 6px; overflow-x: auto; padding: 5px; margin-bottom: 20px; background: #e9ede5; border-radius: 13px; }
     .tab { flex: 1; min-width: max-content; border: 0; padding: 12px 16px; border-radius: 9px; background: transparent; color: #65756c; font-size: 13px; font-weight: 700; }
     .tab.active { color: var(--green-dark); background: white; box-shadow: 0 2px 6px rgba(32,55,42,.08); }
@@ -82,6 +139,15 @@
     .tag { padding: 6px 9px; border-radius: 7px; background: #f0f3ed; color: #526357; font-size: 10px; font-weight: 700; }
     .tag.role { background: #edf4df; color: #4b6833; }
     .card-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 15px; padding-top: 12px; border-top: 1px solid #f0f1ed; }
+    .listing-socials { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .listing-socials a { display: grid; place-items: center; width: 34px; height: 34px; border: 1px solid var(--line); border-radius: 9px; color: var(--green); background: #f8f9f6; }
+    .listing-socials a:hover { background: #edf4df; }
+    .listing-socials svg { width: 17px; height: 17px; fill: currentColor; }
+    .listing-owner-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; }
+    .listing-owner-actions span { color: var(--muted); font-size: 10px; font-weight: 700; }
+    .listing-owner-actions button { padding: 6px 9px; border: 1px solid var(--line); border-radius: 7px; background: #f8f9f6; color: var(--green); font-size: 10px; font-weight: 700; }
+    .listing-owner-actions button[data-delete-listing] { color: #a33b2d; }
+    .listing-date { margin-top: 9px; color: var(--muted); font-size: 10px; }
     .location { color: var(--muted); font-size: 11px; }
     .location:before { content: "⌖ "; color: var(--green); font-size: 14px; }
     .empty { grid-column: 1/-1; text-align: center; padding: 52px 20px; background: white; border: 1px dashed #d6ddd2; border-radius: 16px; color: var(--muted); }
@@ -97,30 +163,91 @@
     .field textarea { min-height: 75px; resize: vertical; }
     .form-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; }
     .notice { margin-top: 12px; padding: 11px 13px; border-radius: 9px; background: #f1f5e9; color: #54684d; font-size: 11px; line-height: 1.5; }
+    .directory-page { padding: 26px 0 65px; }
+    .directory-page[hidden] { display: none; }
+    .directory-heading { display: flex; justify-content: space-between; align-items: end; gap: 18px; margin-bottom: 20px; }
+    .directory-heading h1 { margin: 7px 0; color: var(--ink); font-size: 36px; letter-spacing: -1.5px; }
+    .directory-heading p { margin: 0; color: var(--muted); font-size: 13px; }
+    .directory-count { color: var(--muted); font-size: 12px; white-space: nowrap; }
+    .directory-filters { display: flex; flex-wrap: wrap; gap: 7px; margin: -4px 0 17px; }
+    .directory-filters .tag { border: 0; cursor: pointer; }
+    body.directory-mode .hero,
+    body.directory-mode .about,
+    body.directory-mode .stats,
+    body.directory-mode #community,
+    body.directory-mode #contact { display: none; }
     footer { display: flex; justify-content: space-between; gap: 20px; padding: 18px 0 25px; border-top: 1px solid var(--line); color: var(--muted); font-size: 11px; }
     .toast { position: fixed; z-index: 5; right: 22px; bottom: 22px; max-width: calc(100vw - 44px); padding: 13px 17px; border-radius: 10px; background: var(--green-dark); color: white; box-shadow: var(--shadow); font-size: 13px; opacity: 0; transform: translateY(10px); pointer-events: none; transition: .2s; }
     .toast.show { opacity: 1; transform: translateY(0); }
     @media (max-width: 850px) { .grid { grid-template-columns: repeat(2, 1fr); } .hero-art { margin-right: 32px; width: 145px; height: 145px; font-size: 55px; } .hero { padding: 42px 38px; } }
     @media (max-width: 620px) {
-      .shell { padding: 0 17px; } header { height: 69px; } .header-note { display: none; }
+      .shell { padding: 0 17px; } header { height: 69px; } .header-nav { flex: 1; gap: 12px; overflow-x: auto; } .header-nav a { flex: 0 0 auto; font-size: 11px; } .account-tools span { display: none; }
+      .auth-gate { margin: 20px auto 45px; padding: 22px; }
       .hero { min-height: 0; padding: 34px 25px; border-radius: 19px; } .hero-art { display: none; } h1 { font-size: 42px; letter-spacing: -1.8px; }
+      .about { grid-template-columns: 1fr; gap: 18px; margin: 14px 0 22px; padding: 22px; } .about h2 { font-size: 22px; } .purpose-grid { grid-template-columns: 1fr; } .contact { padding: 22px; }
       .hero p { font-size: 14px; } .stats { gap: 7px; margin: 12px 0 27px; } .stat { display: block; padding: 11px 10px; } .stat-icon { display: none; } .stat strong { font-size: 16px; } .stat span:last-child { font-size: 9px; }
       .section-heading { align-items: start; flex-direction: column; } .tabs { margin-right: -17px; border-radius: 10px 0 0 10px; } .tab { padding: 11px 13px; }
+      .directory-heading { align-items: start; flex-direction: column; } .directory-heading h1 { font-size: 30px; }
       .toolbar { align-items: stretch; } .toolbar .button { padding: 10px 12px; font-size: 12px; } .grid { grid-template-columns: 1fr; }
       .card p.description { min-height: 0; } .form-grid { grid-template-columns: 1fr; } .field.full { grid-column: auto; }
       footer { flex-direction: column; gap: 5px; }
     }
   </style>
 </head>
-<body>
+<body class="signed-out">
   <div class="shell">
     <header>
       <a class="brand" href="#" aria-label="Township Economy home">
         <span class="brand-mark">↗</span>
         <span>Township Economy<small>LOCAL PEOPLE. LOCAL OPPORTUNITY.</small></span>
       </a>
-      <span class="header-note">A little closer to home.</span>
+      <nav class="header-nav" aria-label="Main navigation">
+        <a href="#about" data-home-nav>About us</a>
+        <a href="#community" data-home-nav>Explore community</a>
+        <a href="?directory=members" data-home-nav>Full directory</a>
+        <a href="#contact" data-home-nav>Contact</a>
+        <a href="index.html" id="home-link">Home</a>
+        <a href="index.html#about" class="directory-nav">About us</a>
+        <a href="index.html#community" class="directory-nav">Explore community</a>
+        <a href="index.html?directory=members" class="directory-nav">Full directory</a>
+        <a href="index.html#contact" class="directory-nav">Contact</a>
+      </nav>
+      <div class="account-tools" id="account-tools" hidden>
+        <span id="account-name"></span>
+        <button type="button" id="sign-out">Sign out</button>
+      </div>
     </header>
+
+    <section class="auth-gate" id="auth-gate" aria-labelledby="auth-title" hidden>
+      <span class="about-eyebrow">Township Economy members</span>
+      <h1 id="auth-title">Welcome back.</h1>
+      <p id="auth-description">Sign in to browse community listings and connect with members.</p>
+      <form class="auth-form" id="login-form">
+        <div class="auth-field"><label for="login-email">Email address</label><input id="login-email" name="email" type="email" autocomplete="email" required maxlength="254"></div>
+        <div class="auth-field"><label for="login-password">Password</label><input id="login-password" name="password" type="password" autocomplete="current-password" required maxlength="72"></div>
+        <p class="auth-forgot" id="login-forgot"><button type="button" id="forgot-password">Forgot your password?</button></p>
+        <button class="button" type="submit">Sign in</button>
+      </form>
+      <form class="auth-form" id="register-form" hidden>
+        <div class="auth-field"><label for="register-name">Your name</label><input id="register-name" name="name" autocomplete="name" required maxlength="70"></div>
+        <div class="auth-field"><label for="register-email">Email address</label><input id="register-email" name="email" type="email" autocomplete="email" required maxlength="254"></div>
+        <div class="auth-field"><label for="register-password">Password (at least 12 characters)</label><input id="register-password" name="password" type="password" autocomplete="new-password" required minlength="12" maxlength="72"></div>
+        <button class="button" type="submit">Create account</button>
+      </form>
+      <form class="auth-form" id="reset-request-form" hidden>
+        <div class="auth-field"><label for="reset-request-email">Email address</label><input id="reset-request-email" name="email" type="email" autocomplete="email" required maxlength="254"></div>
+        <button class="button" type="submit">Send reset link</button>
+      </form>
+      <form class="auth-form" id="reset-password-form" hidden>
+        <div class="auth-field"><label for="reset-password">New password (at least 12 characters)</label><input id="reset-password" name="password" type="password" autocomplete="new-password" required minlength="12" maxlength="72"></div>
+        <div class="auth-field"><label for="reset-password-confirm">Confirm new password</label><input id="reset-password-confirm" name="confirmPassword" type="password" autocomplete="new-password" required minlength="12" maxlength="72"></div>
+        <button class="button" type="submit">Save new password</button>
+      </form>
+      <p class="auth-error" id="auth-error" role="alert"></p>
+      <div class="auth-switch"><span id="auth-switch-label">New to the community?</span> <button type="button" id="auth-switch-button">Create an account</button></div>
+      <button type="button" class="auth-back" id="auth-back-to-login" hidden>Return to sign in</button>
+      <div class="auth-notice">Listings are visible to signed-in members. Only you can close or remove listings posted from your account. Avoid posting sensitive personal information.</div>
+    </section>
 
     <main>
       <section class="hero">
@@ -128,8 +255,35 @@
           <div class="eyebrow">Good things happen locally</div>
           <h1>Our community is our greatest economy.</h1>
           <p>Meet the people, find the work, and discover the services that keep our township thriving. Your next opportunity is right around the corner.</p>
+          <div class="contact-actions">
+            <a class="button" href="#community" data-home-view="jobs">Find work</a>
+            <a class="button secondary" href="#community" data-home-view="services">Find a service</a>
+          </div>
         </div>
         <div class="hero-art" aria-hidden="true">✳</div>
+      </section>
+
+      <section class="about" id="about" aria-labelledby="about-title">
+        <div class="about-copy">
+          <span class="about-eyebrow">About Township Economy</span>
+          <h2 id="about-title">A stronger township starts with connection.</h2>
+          <p>Township Economy is a community directory built to make local talent, work, and services easier to find. We bring neighbours and local businesses together so more opportunities can stay close to home.</p>
+        </div>
+        <div class="about-points">
+          <div class="about-point"><span class="about-point-icon">◎</span><div><strong>Meet your neighbours</strong><span>Discover the people, skills, and small businesses in your community.</span></div></div>
+          <div class="about-point"><span class="about-point-icon">↗</span><div><strong>Connect through work</strong><span>Share job openings or let local employers know you’re looking.</span></div></div>
+          <div class="about-point"><span class="about-point-icon">✳</span><div><strong>Support local services</strong><span>Find a nearby provider or introduce your own service to the township.</span></div></div>
+        </div>
+        <div class="purpose-grid">
+          <article class="purpose-card">
+            <h3>Our Vision</h3>
+            <p>A thriving township where local people and businesses are connected to opportunity, support, and sustainable growth.</p>
+          </article>
+          <article class="purpose-card">
+            <h3>Our Mission</h3>
+            <p>To make it easier for neighbours to discover local talent, share work opportunities, and find trusted services—helping strengthen connections and keep more value in the community.</p>
+          </article>
+        </div>
       </section>
 
       <section class="stats" aria-label="Community overview">
@@ -138,7 +292,7 @@
         <div class="stat"><span class="stat-icon">✳</span><div><strong id="service-count">0</strong><span>services to discover</span></div></div>
       </section>
 
-      <section class="content">
+      <section class="content" id="community">
         <div class="section-heading">
           <div><h2 id="view-title">Your township, at a glance</h2><p id="view-description">Get to know the people and small businesses in your community.</p></div>
         </div>
@@ -148,6 +302,46 @@
           <button class="tab" data-view="services">Service providers</button>
         </nav>
         <div id="view-content"></div>
+        <div class="view-all-row" id="home-directory-link"></div>
+      </section>
+
+      <section class="directory-page" id="directory-page" hidden>
+        <div class="directory-heading">
+          <div>
+            <span class="about-eyebrow">Township directory</span>
+            <h1 id="directory-title">All community members</h1>
+            <p id="directory-description">Search the full list of people in your community.</p>
+          </div>
+          <span class="directory-count" id="directory-count"></span>
+        </div>
+        <nav class="tabs" aria-label="Directory categories">
+          <button class="tab" data-directory-view="members">Community members</button>
+          <button class="tab" data-directory-view="jobs">Jobs & opportunities</button>
+          <button class="tab" data-directory-view="services">Service providers</button>
+        </nav>
+        <label class="search" style="display:block;margin-bottom:16px">
+          <input id="directory-search" type="search" placeholder="Search the full directory…" aria-label="Search the full directory">
+        </label>
+        <div id="directory-filters" class="directory-filters"></div>
+        <div class="grid" id="directory-results"></div>
+      </section>
+
+      <section class="contact" id="contact" aria-labelledby="contact-title">
+        <span class="about-eyebrow">Get in touch</span>
+        <h2 id="contact-title">Connect directly with your community.</h2>
+        <p>Township Economy doesn’t have a shared support inbox yet. To get in touch with someone, browse their job or service listing and use its contact link. If you’re looking to be found, add your own listing to the directory.</p>
+        <div class="contact-links" aria-label="Township Economy contact channels">
+          <span class="contact-link" aria-disabled="true" title="Add a WhatsApp number to activate"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a9.8 9.8 0 0 0-8.4 14.85L2.3 22l5.3-1.25A10 10 0 1 0 12 2Zm0 17.9a8 8 0 0 1-4.08-1.12l-.3-.18-3.14.74.77-3.06-.2-.32A7.9 7.9 0 1 1 12 19.9Zm4.36-5.93c-.24-.12-1.43-.7-1.65-.78-.22-.08-.38-.12-.53.12-.16.24-.62.78-.76.94-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.43-1.34-1.67-.14-.24-.02-.37.1-.49.1-.1.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.53-1.28-.73-1.75-.19-.46-.39-.4-.53-.4h-.45c-.16 0-.42.06-.64.3-.22.24-.84.82-.84 1.98s.86 2.3.98 2.46c.12.16 1.7 2.6 4.12 3.64.58.25 1.04.4 1.4.51.59.19 1.12.16 1.54.1.47-.07 1.43-.58 1.63-1.14.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.46-.28Z"/></svg>WhatsApp</span>
+          <span class="contact-link" aria-disabled="true" title="Add an Instagram profile link to activate"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7Zm5 3a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm5.25-3.25a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5Z"/></svg>Instagram</span>
+          <span class="contact-link" aria-disabled="true" title="Add a Facebook page link to activate"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 22v-8.9h3l.45-3.48H13.5V7.4c0-1 .28-1.68 1.72-1.68h1.84V2.6A24 24 0 0 0 14.38 2C11.72 2 9.9 3.62 9.9 6.6v3.02H6.88v3.48H9.9V22h3.6Z"/></svg>Facebook</span>
+          <span class="contact-link" aria-disabled="true" title="Add a social profile link to activate"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.6 8.2a4.6 4.6 0 0 1-4.6-4.6h-3.3v12.7a2.8 2.8 0 1 1-2.8-2.8c.3 0 .6 0 .8.1v-3.4a6.4 6.4 0 1 0 5.3 6.3V10a7.9 7.9 0 0 0 4.6 1.5V8.2Z"/></svg>TikTok</span>
+          <span class="contact-link" aria-disabled="true" title="Add a website URL to activate"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm7.9 9h-3.04a15.7 15.7 0 0 0-1.28-5.2A8.03 8.03 0 0 1 19.9 11ZM12 4c.95 1.3 1.72 3.8 1.9 7h-3.8c.18-3.2.95-5.7 1.9-7ZM4.1 13h3.04a15.7 15.7 0 0 0 1.28 5.2A8.03 8.03 0 0 1 4.1 13Zm3.04-2H4.1a8.03 8.03 0 0 1 4.32-5.2A15.7 15.7 0 0 0 7.14 11Zm2.96 2h3.8c-.18 3.2-.95 5.7-1.9 7-.95-1.3-1.72-3.8-1.9-7Zm5.48 5.2a15.7 15.7 0 0 0 1.28-5.2h3.04a8.03 8.03 0 0 1-4.32 5.2Z"/></svg>Website</span>
+        </div>
+        <p class="contact-note">Contact icons will become clickable once the corresponding phone number or profile links are added.</p>
+        <div class="contact-actions">
+          <a class="button" href="#community" data-contact-view="jobs">Browse jobs & opportunities</a>
+          <a class="button secondary" href="#community" data-contact-view="services">Find a service provider</a>
+        </div>
       </section>
     </main>
 
@@ -156,32 +350,12 @@
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script>
-    const seed = {
-      members: [
-        { name: "Nomsa Dlamini", role: "Community gardener", location: "Central Township", about: "Growing fresh produce and greener spaces for our neighbours.", tags: ["Gardening", "Community"], kind: "member" },
-        { name: "Thabo Mokoena", role: "Youth mentor", location: "Eastside", about: "Helping young people build confidence, skills, and a brighter future.", tags: ["Education", "Mentoring"], kind: "member" },
-        { name: "Lerato Khumalo", role: "Baker & local maker", location: "Market District", about: "Making fresh bread and treats with a whole lot of township love.", tags: ["Food", "Small business"], kind: "member" }
-      ],
-      jobs: [
-        { title: "Weekend shop assistant", company: "Green Basket Market", type: "Hiring", location: "Market District", description: "Friendly, reliable person needed for Saturday shifts. Training provided.", contact: "market@example.com" },
-        { title: "Looking for childcare work", company: "Ayanda N.", type: "Seeking work", location: "Central Township", description: "Experienced and caring childcare provider available weekdays.", contact: "ayanda@example.com" },
-        { title: "Part-time bookkeeping help", company: "Township Traders Co-op", type: "Hiring", location: "Eastside", description: "Seeking help with weekly records. Flexible hours; small-business experience a plus.", contact: "traders@example.com" }
-      ],
-      services: [
-        { name: "Mandla's Home Repairs", category: "Repairs & maintenance", location: "Central Township", description: "Small home repairs, painting, and fixture installations. Fair quotes and dependable work.", contact: "mandla@example.com" },
-        { name: "Zee's Hair Studio", category: "Beauty & wellness", location: "Market District", description: "Braids, cuts, and styling in a friendly neighbourhood studio.", contact: "zee@example.com" },
-        { name: "Fresh Start Tutoring", category: "Education", location: "Eastside", description: "Patient, one-to-one tutoring for primary school learners in maths and reading.", contact: "freshstart@example.com" }
-      ]
-    };
-    const storageKey = "townshipEconomyData";
-    let data;
-    try {
-      const saved = localStorage.getItem(storageKey);
-      data = saved ? { ...seed, ...JSON.parse(saved) } : structuredClone(seed);
-    } catch (error) {
-      console.error("Could not load saved township listings.", error);
-      data = structuredClone(seed);
-    }
+    const directoryParam = new URLSearchParams(window.location.search).get("directory");
+    const isDirectoryPage = ["members", "jobs", "services"].includes(directoryParam);
+    let resetToken = new URLSearchParams(window.location.search).get("reset") || "";
+    let data = { members: [], jobs: [], services: [] };
+    let currentUser = null;
+    let authMode = "login";
     let activeView = "members";
     let searchTerm = "";
     let jobFilter = "All";
@@ -194,10 +368,98 @@
     };
     const escapeHTML = value => String(value ?? "").replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
     const initials = name => String(name || "?").trim().split(/\s+/).slice(0, 2).map(part => part[0] || "").join("").toUpperCase();
-    const save = () => {
-      try { localStorage.setItem(storageKey, JSON.stringify(data)); }
-      catch (error) { console.error("Could not save township listings.", error); showToast("Your browser couldn't save this listing. Please check available storage."); }
-    };
+    async function apiRequest(path, options = {}) {
+      if (window.location.protocol === "file:") {
+        throw new Error("This page was opened directly and cannot save accounts. Set up PostgreSQL, run npm start in the Township Economy folder, then open http://localhost:3000.");
+      }
+      let response;
+      try {
+        response = await fetch(path, {
+          credentials: "same-origin",
+          ...options,
+          headers: { ...(options.body ? { "Content-Type": "application/json" } : {}), ...options.headers }
+        });
+      } catch {
+        throw new Error("The Township Economy server could not be reached. Run npm start in the project folder and open http://localhost:3000.");
+      }
+      let result;
+      try {
+        result = await response.json();
+      } catch {
+        throw new Error("The server returned an invalid response.");
+      }
+      if (!response.ok) throw new Error(result.error || "The request could not be completed.");
+      return result;
+    }
+
+    async function loadListings() {
+      const [members, jobs, services] = await Promise.all(
+        ["members", "jobs", "services"].map(async kind => (await apiRequest(`/api/listings?kind=${kind}`)).listings)
+      );
+      data = { members, jobs, services };
+    }
+
+    function showAuthGate(mode = "login", message = "") {
+      authMode = mode;
+      currentUser = null;
+      document.body.classList.add("signed-out");
+      document.getElementById("account-tools").hidden = true;
+      document.getElementById("auth-gate").hidden = false;
+      document.getElementById("login-form").hidden = mode !== "login";
+      document.getElementById("register-form").hidden = mode !== "register";
+      document.getElementById("reset-request-form").hidden = mode !== "request-reset";
+      document.getElementById("reset-password-form").hidden = mode !== "reset-password";
+      document.getElementById("login-forgot").hidden = mode !== "login";
+      document.getElementById("auth-title").textContent = ({
+        login: "Welcome back.",
+        register: "Join your community.",
+        "request-reset": "Reset your password.",
+        "request-sent": "Check your inbox.",
+        "reset-password": "Choose a new password."
+      })[mode];
+      document.getElementById("auth-description").textContent = ({
+        login: "Sign in to browse community listings and connect with members.",
+        register: "Create an account to find local people, work, and services.",
+        "request-reset": "Enter the email address linked to your account and we’ll send a reset link.",
+        "request-sent": "If an account exists for that email, a password reset link will be sent.",
+        "reset-password": "Enter a new password for your account."
+      })[mode];
+      document.getElementById("auth-switch-label").textContent = mode === "login" ? "New to the community?" : "Already have an account?";
+      document.getElementById("auth-switch-button").textContent = mode === "login" ? "Create an account" : "Sign in";
+      document.querySelector(".auth-switch").hidden = mode !== "login" && mode !== "register";
+      document.getElementById("auth-back-to-login").hidden = mode === "login" || mode === "register";
+      document.querySelector(".auth-notice").hidden = mode === "request-reset" || mode === "request-sent" || mode === "reset-password";
+      document.getElementById("auth-error").textContent = message;
+      document.getElementById("auth-error").classList.toggle("success", Boolean(message) && mode === "login");
+    }
+
+    function showSignedIn(user) {
+      currentUser = user;
+      document.body.classList.remove("signed-out");
+      document.getElementById("auth-gate").hidden = true;
+      document.getElementById("account-tools").hidden = false;
+      document.getElementById("account-name").textContent = user.name;
+    }
+
+    async function authenticate(event, mode) {
+      event.preventDefault();
+      const form = event.target;
+      const submit = form.querySelector('button[type="submit"]');
+      submit.disabled = true;
+      document.getElementById("auth-error").textContent = "";
+      try {
+        const values = Object.fromEntries(new FormData(form).entries());
+        const { user } = await apiRequest(`/api/auth/${mode}`, { method: "POST", body: JSON.stringify(values) });
+        showSignedIn(user);
+        await loadListings();
+        if (isDirectoryPage) renderDirectory();
+        else render();
+      } catch (error) {
+        document.getElementById("auth-error").textContent = error.message;
+      } finally {
+        submit.disabled = false;
+      }
+    }
 
     function updateStats() {
       document.getElementById("member-count").textContent = data.members.length;
@@ -208,34 +470,94 @@
     function memberCards() {
       const items = data.members.filter(item => `${item.name} ${item.role} ${item.location} ${(item.tags || []).join(" ")}`.toLowerCase().includes(searchTerm));
       if (!items.length) return emptyState("No members found", "Try another search, or be the first to join.");
-      return items.map((item, index) => `<article class="card">
+      return items.slice(0, isDirectoryPage ? items.length : 5).map((item, index) => `<article class="card">
         <div class="card-top"><div class="avatar ${["", "orange", "blue"][index % 3]}">${escapeHTML(initials(item.name))}</div><div><h3>${escapeHTML(item.name)}</h3><p class="sub">${escapeHTML(item.role)}</p></div></div>
         <p class="description">${escapeHTML(item.about || "A member of our local community.")}</p>
         <div class="tag-row">${(item.tags || []).map(tag => `<span class="tag">${escapeHTML(tag)}</span>`).join("")}</div>
-        <div class="card-foot"><span class="location">${escapeHTML(item.location)}</span><span class="tag role">Member</span></div>
+        <div class="card-foot"><span class="location">${escapeHTML(item.location)}</span><span class="tag role">${item.status === "closed" ? "Unavailable" : "Member"}</span></div>
+        ${listingDate(item.createdAt)}
+        ${listingOwnerActions(item)}
       </article>`).join("");
     }
 
     function jobCards() {
       const items = data.jobs.filter(item => (jobFilter === "All" || item.type === jobFilter) && `${item.title} ${item.company} ${item.location} ${item.description}`.toLowerCase().includes(searchTerm));
       if (!items.length) return emptyState("No opportunities found", "Try another search or post an opportunity for your neighbours.");
-      return items.map((item, index) => `<article class="card">
+      return items.slice(0, isDirectoryPage ? items.length : 5).map((item, index) => `<article class="card">
         <div class="card-top"><div class="avatar ${item.type === "Hiring" ? "" : "orange"}">${item.type === "Hiring" ? "↗" : "◎"}</div><div><h3>${escapeHTML(item.title)}</h3><p class="sub">${escapeHTML(item.company)}</p></div></div>
         <p class="description">${escapeHTML(item.description)}</p>
-        <div class="tag-row"><span class="tag role">${escapeHTML(item.type)}</span></div>
+        <div class="tag-row"><span class="tag role">${escapeHTML(item.type)}</span>${item.status === "closed" ? '<span class="tag">Closed</span>' : ""}</div>
+        ${listingSocialIcons(item)}
         <div class="card-foot"><span class="location">${escapeHTML(item.location)}</span><a class="button small secondary" href="mailto:${escapeHTML(item.contact)}?subject=${encodeURIComponent("Township Economy: " + item.title)}">Get in touch</a></div>
+        ${listingDate(item.createdAt)}
+        ${listingOwnerActions(item)}
       </article>`).join("");
     }
 
     function serviceCards() {
       const items = data.services.filter(item => `${item.name} ${item.category} ${item.location} ${item.description}`.toLowerCase().includes(searchTerm));
       if (!items.length) return emptyState("No providers found", "Try another search or add your service to the directory.");
-      return items.map((item, index) => `<article class="card">
+      return items.slice(0, isDirectoryPage ? items.length : 5).map((item, index) => `<article class="card">
         <div class="card-top"><div class="avatar ${["", "orange", "blue"][index % 3]}">✳</div><div><h3>${escapeHTML(item.name)}</h3><p class="sub">${escapeHTML(item.category)}</p></div></div>
         <p class="description">${escapeHTML(item.description)}</p>
-        <div class="tag-row"><span class="tag role">${escapeHTML(item.category)}</span></div>
+        <div class="tag-row"><span class="tag role">${escapeHTML(item.category)}</span>${item.status === "closed" ? '<span class="tag">Unavailable</span>' : ""}</div>
+        ${listingSocialIcons(item)}
         <div class="card-foot"><span class="location">${escapeHTML(item.location)}</span><a class="button small secondary" href="mailto:${escapeHTML(item.contact)}?subject=${encodeURIComponent("Township Economy enquiry")}" aria-label="Contact ${escapeHTML(item.name)}">Contact</a></div>
+        ${listingDate(item.createdAt)}
+        ${listingOwnerActions(item)}
       </article>`).join("");
+    }
+
+    function listingOwnerActions(item) {
+      if (!item.isOwner) return "";
+      const nextStatus = item.status === "closed" ? "active" : "closed";
+      const actionLabel = item.status === "closed" ? "Reopen listing" : "Mark unavailable";
+      return `<div class="listing-owner-actions"><span>Your listing</span><button type="button" data-listing-status="${nextStatus}" data-listing-id="${escapeHTML(item.id)}">${actionLabel}</button><button type="button" data-delete-listing="${escapeHTML(item.id)}">Delete</button></div>`;
+    }
+
+    function listingDate(value) {
+      const date = new Date(value);
+      if (!value || Number.isNaN(date.getTime())) return "";
+      return `<div class="listing-date">Posted ${escapeHTML(new Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(date))}</div>`;
+    }
+
+    const contactIconPaths = {
+      whatsapp: "M12 2a9.8 9.8 0 0 0-8.4 14.85L2.3 22l5.3-1.25A10 10 0 1 0 12 2Zm0 17.9a8 8 0 0 1-4.08-1.12l-.3-.18-3.14.74.77-3.06-.2-.32A7.9 7.9 0 1 1 12 19.9Zm4.36-5.93c-.24-.12-1.43-.7-1.65-.78-.22-.08-.38-.12-.53.12-.16.24-.62.78-.76.94-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.43-1.34-1.67-.14-.24-.02-.37.1-.49.1-.1.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.53-1.28-.73-1.75-.19-.46-.39-.4-.53-.4h-.45c-.16 0-.42.06-.64.3-.22.24-.84.82-.84 1.98s.86 2.3.98 2.46c.12.16 1.7 2.6 4.12 3.64.58.25 1.04.4 1.4.51.59.19 1.12.16 1.54.1.47-.07 1.43-.58 1.63-1.14.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.46-.28Z",
+      instagram: "M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7Zm5 3a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm5.25-3.25a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5Z",
+      facebook: "M13.5 22v-8.9h3l.45-3.48H13.5V7.4c0-1 .28-1.68 1.72-1.68h1.84V2.6A24 24 0 0 0 14.38 2C11.72 2 9.9 3.62 9.9 6.6v3.02H6.88v3.48H9.9V22h3.6Z",
+      tiktok: "M19.6 8.2a4.6 4.6 0 0 1-4.6-4.6h-3.3v12.7a2.8 2.8 0 1 1-2.8-2.8c.3 0 .6 0 .8.1v-3.4a6.4 6.4 0 1 0 5.3 6.3V10a7.9 7.9 0 0 0 4.6 1.5V8.2Z",
+      website: "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm7.9 9h-3.04a15.7 15.7 0 0 0-1.28-5.2A8.03 8.03 0 0 1 19.9 11ZM12 4c.95 1.3 1.72 3.8 1.9 7h-3.8c.18-3.2.95-5.7 1.9-7ZM4.1 13h3.04a15.7 15.7 0 0 0 1.28 5.2A8.03 8.03 0 0 1 4.1 13Zm3.04-2H4.1a8.03 8.03 0 0 1 4.32-5.2A15.7 15.7 0 0 0 7.14 11Zm2.96 2h3.8c-.18 3.2-.95 5.7-1.9 7-.95-1.3-1.72-3.8-1.9-7Zm5.48 5.2a15.7 15.7 0 0 0 1.28-5.2h3.04a8.03 8.03 0 0 1-4.32 5.2Z"
+    };
+    const contactIconLabels = { whatsapp: "WhatsApp", instagram: "Instagram", facebook: "Facebook", tiktok: "TikTok", website: "Website" };
+
+    function safeExternalUrl(value) {
+      if (!value) return "";
+      try {
+        const url = new URL(value);
+        return url.protocol === "https:" || url.protocol === "http:" ? url.href : "";
+      } catch {
+        return "";
+      }
+    }
+
+    function listingSocialIcons(item) {
+      const links = [];
+      const phone = String(item.whatsapp || "").replace(/\D/g, "");
+      if (phone.length >= 8 && phone.length <= 15) links.push(["whatsapp", `https://wa.me/${phone}`]);
+      for (const network of ["instagram", "facebook", "tiktok", "website"]) {
+        const url = safeExternalUrl(item[network]);
+        if (url) links.push([network, url]);
+      }
+      if (!links.length) return "";
+      return `<div class="listing-socials" aria-label="Member-provided contact links">${links.map(([network, url]) => `<a href="${escapeHTML(url)}" target="_blank" rel="noopener noreferrer" aria-label="${contactIconLabels[network]}" title="${contactIconLabels[network]}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${contactIconPaths[network]}"/></svg></a>`).join("")}</div>`;
+    }
+
+    function optionalContactFields() {
+      return `<div class="field"><label for="whatsapp">WhatsApp (optional)</label><input id="whatsapp" name="whatsapp" type="tel" maxlength="24" placeholder="Include country code"></div>
+        <div class="field"><label for="instagram">Instagram URL (optional)</label><input id="instagram" name="instagram" type="url" maxlength="200" placeholder="https://instagram.com/…"></div>
+        <div class="field"><label for="facebook">Facebook URL (optional)</label><input id="facebook" name="facebook" type="url" maxlength="200" placeholder="https://facebook.com/…"></div>
+        <div class="field"><label for="tiktok">TikTok URL (optional)</label><input id="tiktok" name="tiktok" type="url" maxlength="200" placeholder="https://tiktok.com/@…"></div>
+        <div class="field full"><label for="website">Website URL (optional)</label><input id="website" name="website" type="url" maxlength="200" placeholder="https://example.com"></div>`;
     }
 
     function emptyState(title, message) {
@@ -261,6 +583,40 @@
       const filters = activeView === "jobs" ? `<div class="tag-row" style="margin: -3px 0 16px">${["All", "Hiring", "Seeking work"].map(filter => `<button class="tag ${jobFilter === filter ? "role" : ""}" data-job-filter="${filter}" style="border:0;cursor:pointer">${filter}</button>`).join("")}</div>` : "";
       const cards = activeView === "members" ? memberCards() : activeView === "jobs" ? jobCards() : serviceCards();
       content.innerHTML = `${search}${filters}<div class="grid">${cards}</div>`;
+      const directoryLink = document.getElementById("home-directory-link");
+      const count = activeView === "members" ? data.members.length : activeView === "jobs" ? data.jobs.length : data.services.length;
+      const label = activeView === "members" ? "members" : activeView === "jobs" ? "jobs & opportunities" : "service providers";
+      directoryLink.innerHTML = `<a class="view-all" href="?directory=${activeView}">View all ${count} ${label} & search →</a>`;
+    }
+
+    function renderDirectory() {
+      document.body.classList.add("directory-mode");
+      activeView = directoryParam;
+      const headings = {
+        members: ["All community members", "Search the full list of people in your community."],
+        jobs: ["All jobs & opportunities", "Browse job openings and people seeking work."],
+        services: ["All service providers", "Search services available across the community."]
+      };
+      document.getElementById("directory-title").textContent = headings[activeView][0];
+      document.getElementById("directory-description").textContent = headings[activeView][1];
+      document.querySelectorAll("[data-directory-view]").forEach(tab => {
+        const selected = tab.dataset.directoryView === activeView;
+        tab.classList.toggle("active", selected);
+        tab.setAttribute("aria-current", selected ? "page" : "false");
+      });
+      const counts = {
+        members: data.members.length,
+        jobs: data.jobs.length,
+        services: data.services.length
+      };
+      const countLabel = activeView === "members" ? "members" : activeView === "jobs" ? "opportunities" : "providers";
+      document.getElementById("directory-count").textContent = `${counts[activeView]} ${countLabel}`;
+      const filters = activeView === "jobs"
+        ? ["All", "Hiring", "Seeking work"].map(filter => `<button class="tag ${jobFilter === filter ? "role" : ""}" data-directory-filter="${filter}">${filter}</button>`).join("")
+        : "";
+      document.getElementById("directory-filters").innerHTML = filters;
+      const listings = activeView === "members" ? memberCards() : activeView === "jobs" ? jobCards() : serviceCards();
+      document.getElementById("directory-results").innerHTML = listings;
     }
 
     function formMarkup() {
@@ -269,23 +625,25 @@
         <div class="field"><label for="role">What do you do? *</label><input id="role" name="role" required maxlength="70" placeholder="e.g. Tailor, student, gardener"></div>
         <div class="field"><label for="location">Your area *</label><input id="location" name="location" required maxlength="70" placeholder="Neighbourhood or township"></div>
         <div class="field"><label for="tags">Skills or interests</label><input id="tags" name="tags" maxlength="100" placeholder="e.g. Baking, youth sports"></div>
-        <div class="field full"><label for="about">A little about you</label><textarea id="about" name="about" maxlength="240" placeholder="Share what you do or what you'd like to connect about…"></textarea></div>
-      </div><div class="form-actions"><button type="button" class="button secondary" id="cancel-form">Cancel</button><button class="button" type="submit">Add me to the community</button></div></form><div class="notice">Listings are saved in this browser on this device. Avoid sharing private or sensitive information.</div></div>`;
+        <div class="field full"><label for="member-about">A little about you</label><textarea id="member-about" name="about" maxlength="240" placeholder="Share what you do or what you'd like to connect about…"></textarea></div>
+      </div><div class="form-actions"><button type="button" class="button secondary" id="cancel-form">Cancel</button><button class="button" type="submit">Add me to the community</button></div></form><div class="notice">Your listing will be shared with signed-in members. Avoid sharing sensitive personal information.</div></div>`;
       if (activeView === "jobs") return `<div class="form-panel"><h3>Share a local opportunity</h3><p>Post a role you’re hiring for or let the community know you’re looking for work.</p><form id="listing-form" data-kind="job"><div class="form-grid">
         <div class="field"><label for="type">I'm *</label><select id="type" name="type" required><option value="Hiring">Hiring</option><option value="Seeking work">Seeking work</option></select></div>
         <div class="field"><label for="title">Role or opportunity *</label><input id="title" name="title" required maxlength="80" placeholder="e.g. Weekend shop assistant"></div>
         <div class="field"><label for="company">Your name or organisation *</label><input id="company" name="company" required maxlength="70" placeholder="Name or business"></div>
         <div class="field"><label for="location">Area *</label><input id="location" name="location" required maxlength="70" placeholder="Neighbourhood or township"></div>
         <div class="field full"><label for="description">Details *</label><textarea id="description" name="description" required maxlength="300" placeholder="Include the key details someone needs to know…"></textarea></div>
-        <div class="field full"><label for="contact">Contact email *</label><input id="contact" name="contact" type="email" required maxlength="120" placeholder="you@example.com"></div>
-      </div><div class="form-actions"><button type="button" class="button secondary" id="cancel-form">Cancel</button><button class="button" type="submit">Publish opportunity</button></div></form><div class="notice">Listings are saved in this browser on this device. Avoid sharing private or sensitive information.</div></div>`;
+        <div class="field full"><label for="contact-email">Contact email *</label><input id="contact-email" name="contact" type="email" required maxlength="120" placeholder="you@example.com"></div>
+        ${optionalContactFields()}
+      </div><div class="form-actions"><button type="button" class="button secondary" id="cancel-form">Cancel</button><button class="button" type="submit">Publish opportunity</button></div></form><div class="notice">Your listing will be shared with signed-in members. Contact details and social links you add will be visible to them.</div></div>`;
       return `<div class="form-panel"><h3>Add your service</h3><p>Help neighbours find the skills and services available right here in the township.</p><form id="listing-form" data-kind="service"><div class="form-grid">
         <div class="field"><label for="name">Business or provider name *</label><input id="name" name="name" required maxlength="80" placeholder="e.g. Zee's Hair Studio"></div>
         <div class="field"><label for="category">Type of service *</label><input id="category" name="category" required maxlength="70" placeholder="e.g. Beauty, repairs, catering"></div>
         <div class="field"><label for="location">Area *</label><input id="location" name="location" required maxlength="70" placeholder="Neighbourhood or township"></div>
-        <div class="field"><label for="contact">Contact email *</label><input id="contact" name="contact" type="email" required maxlength="120" placeholder="you@example.com"></div>
+        <div class="field"><label for="contact-email">Contact email *</label><input id="contact-email" name="contact" type="email" required maxlength="120" placeholder="you@example.com"></div>
         <div class="field full"><label for="description">What do you offer? *</label><textarea id="description" name="description" required maxlength="300" placeholder="Tell neighbours about your service…"></textarea></div>
-      </div><div class="form-actions"><button type="button" class="button secondary" id="cancel-form">Cancel</button><button class="button" type="submit">Add my service</button></div></form><div class="notice">Listings are saved in this browser on this device. Avoid sharing private or sensitive information.</div></div>`;
+        ${optionalContactFields()}
+      </div><div class="form-actions"><button type="button" class="button secondary" id="cancel-form">Cancel</button><button class="button" type="submit">Add my service</button></div></form><div class="notice">Your listing will be shared with signed-in members. Contact details and social links you add will be visible to them.</div></div>`;
     }
 
     function showToast(message) {
@@ -295,10 +653,108 @@
       window.setTimeout(() => toast.classList.remove("show"), 3000);
     }
 
-    document.querySelector(".tabs").addEventListener("click", event => {
+    document.getElementById("login-form").addEventListener("submit", event => authenticate(event, "login"));
+    document.getElementById("register-form").addEventListener("submit", event => authenticate(event, "register"));
+    document.getElementById("auth-switch-button").addEventListener("click", () => showAuthGate(authMode === "login" ? "register" : "login"));
+    document.getElementById("forgot-password").addEventListener("click", () => {
+      document.getElementById("reset-request-email").value = document.getElementById("login-email").value;
+      showAuthGate("request-reset");
+    });
+    document.getElementById("auth-back-to-login").addEventListener("click", () => showAuthGate("login"));
+
+    document.getElementById("reset-request-form").addEventListener("submit", async event => {
+      event.preventDefault();
+      const form = event.target;
+      const submit = form.querySelector('button[type="submit"]');
+      submit.disabled = true;
+      document.getElementById("auth-error").textContent = "";
+      try {
+        const values = Object.fromEntries(new FormData(form).entries());
+        await apiRequest("/api/auth/forgot-password", { method: "POST", body: JSON.stringify(values) });
+        showAuthGate("request-sent");
+      } catch (error) {
+        showAuthGate("request-reset", error.message);
+      } finally {
+        submit.disabled = false;
+      }
+    });
+
+    document.getElementById("reset-password-form").addEventListener("submit", async event => {
+      event.preventDefault();
+      const form = event.target;
+      const values = Object.fromEntries(new FormData(form).entries());
+      const feedback = document.getElementById("auth-error");
+      if (values.password !== values.confirmPassword) {
+        feedback.textContent = "The passwords do not match.";
+        feedback.classList.remove("success");
+        return;
+      }
+      const submit = form.querySelector('button[type="submit"]');
+      submit.disabled = true;
+      feedback.textContent = "";
+      try {
+        await apiRequest("/api/auth/reset-password", {
+          method: "POST",
+          body: JSON.stringify({ token: resetToken, password: values.password })
+        });
+        resetToken = "";
+        form.reset();
+        showAuthGate("login", "Your password has been updated. You can now sign in.");
+      } catch (error) {
+        feedback.textContent = error.message;
+      } finally {
+        submit.disabled = false;
+      }
+    });
+
+    document.getElementById("sign-out").addEventListener("click", async () => {
+      try {
+        await apiRequest("/api/auth/logout", { method: "POST", body: "{}" });
+        data = { members: [], jobs: [], services: [] };
+        showAuthGate("login");
+      } catch (error) {
+        showToast(error.message);
+      }
+    });
+
+    document.querySelector(".hero").addEventListener("click", event => {
+      const link = event.target.closest("[data-home-view]");
+      if (!link) return;
+      activeView = link.dataset.homeView;
+      searchTerm = "";
+      render();
+    });
+
+    document.querySelector("#community .tabs").addEventListener("click", event => {
       const tab = event.target.closest("[data-view]");
       if (!tab) return;
       activeView = tab.dataset.view;
+      searchTerm = "";
+      render();
+    });
+
+    document.querySelector("#directory-page .tabs").addEventListener("click", event => {
+      const tab = event.target.closest("[data-directory-view]");
+      if (!tab) return;
+      window.location.href = `?directory=${tab.dataset.directoryView}`;
+    });
+
+    document.getElementById("directory-search").addEventListener("input", event => {
+      searchTerm = event.target.value.trim().toLowerCase();
+      renderDirectory();
+    });
+
+    document.getElementById("directory-filters").addEventListener("click", event => {
+      const filter = event.target.closest("[data-directory-filter]");
+      if (!filter) return;
+      jobFilter = filter.dataset.directoryFilter;
+      renderDirectory();
+    });
+
+    document.getElementById("contact").addEventListener("click", event => {
+      const link = event.target.closest("[data-contact-view]");
+      if (!link) return;
+      activeView = link.dataset.contactView;
       searchTerm = "";
       render();
     });
@@ -313,6 +769,39 @@
       next.setSelectionRange(start, start);
     });
 
+    document.addEventListener("click", async event => {
+      const statusButton = event.target.closest("[data-listing-status]");
+      if (statusButton) {
+        try {
+          await apiRequest(`/api/listings/${encodeURIComponent(statusButton.dataset.listingId)}`, {
+            method: "PATCH",
+            body: JSON.stringify({ status: statusButton.dataset.listingStatus })
+          });
+          await loadListings();
+          if (isDirectoryPage) renderDirectory();
+          else render();
+          showToast("Your listing status has been updated.");
+        } catch (error) {
+          showToast(error.message);
+        }
+        return;
+      }
+      const deleteButton = event.target.closest("[data-delete-listing]");
+      if (deleteButton) {
+        if (!window.confirm("Delete this listing? This cannot be undone.")) return;
+        try {
+          await apiRequest(`/api/listings/${encodeURIComponent(deleteButton.dataset.deleteListing)}`, { method: "DELETE" });
+          await loadListings();
+          if (isDirectoryPage) renderDirectory();
+          else render();
+          showToast("Your listing has been deleted.");
+        } catch (error) {
+          showToast(error.message);
+        }
+        return;
+      }
+    });
+
     content.addEventListener("click", event => {
       const filter = event.target.closest("[data-job-filter]");
       if (filter) { jobFilter = filter.dataset.jobFilter; render(); return; }
@@ -325,26 +814,61 @@
       if (event.target.closest("#cancel-form")) content.querySelector(".form-panel")?.remove();
     });
 
-    content.addEventListener("submit", event => {
+    content.addEventListener("submit", async event => {
       if (event.target.id !== "listing-form") return;
       event.preventDefault();
       const values = Object.fromEntries(new FormData(event.target).entries());
       const kind = event.target.dataset.kind;
+      const apiKind = { member: "members", job: "jobs", service: "services" }[kind];
       if (kind === "member") {
-        data.members.unshift({ ...values, tags: values.tags ? values.tags.split(",").map(tag => tag.trim()).filter(Boolean) : [], kind: "member" });
-      } else if (kind === "job") {
-        data.jobs.unshift(values);
-      } else {
-        data.services.unshift(values);
+        values.tags = values.tags ? values.tags.split(",").map(tag => tag.trim()).filter(Boolean) : [];
       }
-      save();
-      searchTerm = "";
-      render();
-      showToast(kind === "member" ? "Welcome to the community!" : "Your listing has been added.");
+      const button = event.target.querySelector('button[type="submit"]');
+      button.disabled = true;
+      try {
+        await apiRequest("/api/listings", { method: "POST", body: JSON.stringify({ kind: apiKind, data: values }) });
+        await loadListings();
+        searchTerm = "";
+        if (isDirectoryPage) renderDirectory();
+        else render();
+        showToast(kind === "member" ? "Your community profile has been added." : "Your listing has been added.");
+      } catch (error) {
+        showToast(error.message);
+      } finally {
+        button.disabled = false;
+      }
     });
 
     document.getElementById("year").textContent = new Date().getFullYear();
-    render();
+    async function startApp() {
+      if (isDirectoryPage) document.body.classList.add("directory-mode");
+      if (resetToken) {
+        const cleanUrl = new URL(window.location.href);
+        cleanUrl.searchParams.delete("reset");
+        window.history.replaceState(null, "", `${cleanUrl.pathname}${cleanUrl.search}${cleanUrl.hash}`);
+        showAuthGate("reset-password");
+        return;
+      }
+      try {
+        const { user } = await apiRequest("/api/auth/me");
+        if (!user) {
+          showAuthGate("login");
+          return;
+        }
+        showSignedIn(user);
+        await loadListings();
+        if (isDirectoryPage) {
+          document.getElementById("directory-page").hidden = false;
+          renderDirectory();
+        } else {
+          render();
+        }
+      } catch (error) {
+        showAuthGate("login", error.message);
+      }
+    }
+
+    startApp();
   </script>
 </body>
 </html>
