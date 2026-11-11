@@ -182,9 +182,29 @@ setInterval(() => {
 
 function assertSameOrigin(request) {
   const origin = request.headers.origin;
-  const expectedOrigin = process.env.APP_ORIGIN || `http://${request.headers.host}`;
-  if (origin !== expectedOrigin) {
-    const error = new Error("This request could not be verified. Reload the page and try again.");
+  const configuredOrigin = process.env.APP_ORIGIN;
+
+  let actual;
+  let expected;
+
+  try {
+    actual = new URL(origin).origin;
+    expected = new URL(configuredOrigin).origin;
+  } catch {
+    const error = new Error("Invalid request origin.");
+    error.status = 403;
+    throw error;
+  }
+
+  if (actual !== expected) {
+    console.error("Origin verification failed:", {
+      receivedOrigin: actual,
+      expectedOrigin: expected
+    });
+
+    const error = new Error(
+      "This request could not be verified. Reload the page and try again."
+    );
     error.status = 403;
     throw error;
   }
