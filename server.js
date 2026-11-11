@@ -186,7 +186,19 @@ setInterval(() => {
 function assertSameOrigin(request) {
   const origin = request.headers.origin;
   const configuredOrigin = process.env.APP_ORIGIN;
-...
+
+  let actual;
+  let expected;
+
+  try {
+    actual = new URL(origin).origin;
+    expected = new URL(configuredOrigin).origin;
+  } catch {
+    const error = new Error("Invalid request origin.");
+    error.status = 403;
+    throw error;
+  }
+
   if (actual !== expected) {
     console.error("Origin verification failed:", {
       receivedOrigin: actual,
@@ -200,6 +212,7 @@ function assertSameOrigin(request) {
     throw error;
   }
 }
+
 
 
 async function readJson(request) {
