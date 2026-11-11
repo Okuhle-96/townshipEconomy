@@ -107,6 +107,7 @@ async function sendPasswordResetEmail(email, token) {
   } catch {
     throw new Error("APP_ORIGIN must be an exact http or https origin to enable password reset emails.");
   }
+  
   const resetUrl = new URL("/", origin);
   resetUrl.searchParams.set("reset", token);
   const response = await fetch("https://api.resend.com/emails", {
@@ -115,6 +116,7 @@ async function sendPasswordResetEmail(email, token) {
       Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json"
     },
+    
     signal: AbortSignal.timeout(10_000),
     body: JSON.stringify({
       from,
@@ -140,6 +142,7 @@ async function processPasswordResetRequest(email) {
     "INSERT INTO password_reset_tokens (token_hash, user_id, expires_at) VALUES ($1, $2, $3)",
     [tokenDigest, user.id, expiresAt]
   );
+  
   try {
     await sendPasswordResetEmail(user.email, token);
   } catch (error) {
@@ -183,19 +186,7 @@ setInterval(() => {
 function assertSameOrigin(request) {
   const origin = request.headers.origin;
   const configuredOrigin = process.env.APP_ORIGIN;
-
-  let actual;
-  let expected;
-
-  try {
-    actual = new URL(origin).origin;
-    expected = new URL(configuredOrigin).origin;
-  } catch {
-    const error = new Error("Invalid request origin.");
-    error.status = 403;
-    throw error;
-  }
-
+...
   if (actual !== expected) {
     console.error("Origin verification failed:", {
       receivedOrigin: actual,
@@ -209,6 +200,7 @@ function assertSameOrigin(request) {
     throw error;
   }
 }
+
 
 async function readJson(request) {
   if (!String(request.headers["content-type"] || "").toLowerCase().startsWith("application/json")) {
